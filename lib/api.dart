@@ -42,6 +42,36 @@ class LockerApi {
       return ResponseData.connectionRefused;
     }
   }
+
+  Future<ResponseData> lock() async {
+    var url = Uri(
+        scheme: scheme,
+        host: host.split(":")[0],
+        path: "/$token/lock/",
+        port: host.split(":").length > 1 ? int.parse(host.split(":")[1]) : 80);
+
+    try {
+      var r = await http.post(url);
+      return ResponseData.fromJson(jsonDecode(r.body));
+    } catch (e) {
+      return ResponseData.connectionRefused;
+    }
+  }
+
+  Future<ResponseData> unlock() async {
+    var url = Uri(
+        scheme: scheme,
+        host: host.split(":")[0],
+        path: "/$token/unlock/",
+        port: host.split(":").length > 1 ? int.parse(host.split(":")[1]) : 80);
+
+    try {
+      var r = await http.post(url);
+      return ResponseData.fromJson(jsonDecode(r.body));
+    } catch (e) {
+      return ResponseData.connectionRefused;
+    }
+  }
 }
 
 class ResponseData {

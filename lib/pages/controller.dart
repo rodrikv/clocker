@@ -32,8 +32,16 @@ class _ControllerPageState extends State<ControllerPage> {
     _startPing();
   }
 
-  void _Lock() async {
+  void _Suspend() async {
     await api.suspend();
+  }
+
+  void _Lock() async {
+    await api.lock();
+  }
+
+  void _UnLock() async {
+    await api.unlock();
   }
 
   void _startPing() async {
@@ -61,13 +69,52 @@ class _ControllerPageState extends State<ControllerPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: _Lock,
-              icon: const Icon(Icons.lock),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: _Suspend,
+                  icon: const Icon(
+                    Icons.stop_circle,
+                    color: Color.fromARGB(255, 255, 106, 0),
+                  ),
+                  iconSize: 50,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                IconButton(
+                  onPressed: _Lock,
+                  icon: const Icon(
+                    Icons.lock,
+                    color: Colors.lightBlue,
+                  ),
+                  iconSize: 50,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                IconButton(
+                  onPressed: _UnLock,
+                  icon: const Icon(
+                    Icons.lock_open,
+                    color: Colors.green,
+                  ),
+                  iconSize: 50,
+                ),
+              ],
             ),
-            Text(
-              _status,
-              style: const TextStyle(fontSize: 20, fontFamily: "Roboto"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  _status,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontFamily: "Roboto",
+                  ),
+                ),
+              ],
             ),
           ],
         ),
