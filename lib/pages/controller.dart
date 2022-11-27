@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:clocker/api.dart';
 import 'package:clocker/db.dart';
@@ -14,6 +16,8 @@ class _ControllerPageState extends State<ControllerPage> {
   String host = "";
   String token = "";
   late LockerApi api;
+  String _status = "Loading...";
+
   @override
   void initState() {
     getInfo().then((info) {
@@ -25,11 +29,29 @@ class _ControllerPageState extends State<ControllerPage> {
         });
       }
     });
+    _startPing();
   }
 
   void _Lock() async {
-    var r = await api.suspend();
-    print(r);
+    await api.suspend();
+  }
+
+  void _startPing() async {
+    Timer.periodic(Duration(seconds: 1), _Ping);
+  }
+
+  void _Ping(Timer timer) async {
+    ResponseData r = await api.ping();
+
+    if (r.code == 200) {
+      setState(() {
+        _status = "Online";
+      });
+    } else {
+      setState(() {
+        _status = "Offline";
+      });
+    }
   }
 
   @override
@@ -39,7 +61,14 @@ class _ControllerPageState extends State<ControllerPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(onPressed: _Lock, icon: const Icon(Icons.lock)),
+            IconButton(
+              onPressed: _Lock,
+              icon: const Icon(Icons.lock),
+            ),
+            Text(
+              _status,
+              style: const TextStyle(fontSize: 20, fontFamily: "Roboto"),
+            ),
           ],
         ),
       ),
